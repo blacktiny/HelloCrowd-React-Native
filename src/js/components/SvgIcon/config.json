@@ -1,0 +1,56 @@
+{
+  "name": "",
+  "css_prefix_text": "icon-",
+  "css_use_suffix": false,
+  "hinting": true,
+  "units_per_em": 1000,
+  "ascent": 850,
+  "glyphs": [
+    {
+      "uid": "563b79c497dcb35b06f3a1f8d0e12ef8",
+      "css": "menu",
+      "code": 59394,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M846.4 456.8H195.3A29.2 29.2 0 0 0 195.3 515.1H846.4A29.2 29.2 0 0 0 846.4 456.8ZM846.4 208.3H195.3A29.2 29.2 0 0 0 195.3 266.7H846.4A29.2 29.2 0 0 0 846.4 208.3ZM846.4 705.4H195.3A29.2 29.2 0 0 0 195.3 763.7H846.4A29.2 29.2 0 0 0 846.4 705.4Z",
+        "width": 1000
+      },
+      "search": [
+        "menu"
+      ]
+    },
+    {
+      "uid": "039212571e63613368bcb0c1f6e0ca0f",
+      "css": "arrow_right",
+      "code": 59395,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M59.2 0.7L3.3 61.8 480.1 500 3.3 937.8 59.3 999.7 570 530.6A41.7 41.7 0 0 0 570 469.4L59.2 0.7Z",
+        "width": 583
+      },
+      "search": [
+        "arrow_right"
+      ]
+    },
+    {
+      "uid": "ce50292e85eb5d6ee3be61b32bf2bdf3",
+      "css": "ok",
+      "code": 59392,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "b714be5a812a474811604f700dfc87ce",
+      "css": "left-open",
+      "code": 61447,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "dc3f1d5b1d006f7f7b3b6295eccab9da",
+      "css": "camera",
+      "code": 59393,
+      "src": "fontawesome"
+    }
+  ]
+}
