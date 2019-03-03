@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import * as Progress from 'react-native-progress'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Theme } from '../constants/constants';
-import { SvgIcon } from '../components';
+import { SvgIcon } from '../components/SvgIcon';
 
 const splash = require('../../assets/splash.png')
 const yes_mark = require('../../assets/yes_mark.png')
@@ -81,7 +81,7 @@ class LoginScreen extends Component {
           <Form style={styles.form}>
             <Item floatingLabel style={styles.inputItem}>
               <Label style={styles.label}>ID NUMBER</Label>
-              <Input style={styles.input} onChangeText={(value) => this.onInputIDNumberChanged(value)} />
+              <Input style={styles.input} keyboardType='numeric' onChangeText={(value) => this.onInputIDNumberChanged(value)} />
             </Item>
           </Form>
           { validationIDNumber && <SvgIcon name="ok" color={Theme.colorLightGreen} />}

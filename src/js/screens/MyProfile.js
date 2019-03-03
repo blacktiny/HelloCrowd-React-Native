@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView
 import { connect } from 'react-redux'
 // import { BoxShadow } from 'react-native-shadow'
 
-import { SvgIcon } from '../components'
+import { SvgIcon } from '../components/SvgIcon'
 import { Theme } from '../constants/constants';
 
 const iconInspection = require('../../assets/icon_inspection.png')
@@ -27,6 +27,10 @@ class MyProfileScreen extends Component {
       completePercent: 50,
       points: 100
     }
+  }
+
+  onUserBasicInfoDetail = () => {
+    this.props.navigation.navigate('ProfileDetail');
   }
 
   render() {
@@ -59,7 +63,7 @@ class MyProfileScreen extends Component {
         </View>
 
         {/* <BoxShadow setting={shadowOpt}> */}
-          <View style={styles.basicInfoComplete}>
+          <TouchableOpacity style={styles.basicInfoComplete} onPress={() => this.onUserBasicInfoDetail()}>
             <View style={styles.inspectIconSection}>
               <Image style={styles.iconInspection} source={iconInspection} />
             </View>
@@ -67,10 +71,10 @@ class MyProfileScreen extends Component {
               <Text style={styles.basicInfo}>{'Basic Info'}</Text>
               <Text style={styles.complete}>{completePercent}{'% Complete'}</Text>
             </View>
-          </View>
+          </TouchableOpacity>
         {/* </BoxShadow> */}
 
-        <View style={styles.basicPointComplete}>
+        <TouchableOpacity style={styles.basicPointComplete} onPress={() => this.onUserBasicInfoDetail()}>
           <View style={styles.inspectIconSection}>
             <Image style={styles.iconInspection} source={iconInspection} />
           </View>
@@ -81,7 +85,7 @@ class MyProfileScreen extends Component {
             </View>
             <Text style={styles.points}>{points}{' Points'}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.blankBottomView} />
 

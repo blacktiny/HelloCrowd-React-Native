@@ -1,7 +1,11 @@
 import keyMirror from 'keymirror'
 
 export const ActionTypes = keyMirror({
-  LOGIN_USER: null
+  LOGIN_USER: null,
+
+  GET_LOCATION: null,
+  GET_LOCATION_SUCCESS: null,
+  GET_LOCATION_FAIL: null,
 })
 
 export const Theme = {

@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView
 import { connect } from 'react-redux'
 import ProgressCircle from 'react-native-progress-circle'
 
-import { SvgIcon } from '../components'
+import { SvgIcon } from '../components/SvgIcon'
 import { Theme } from '../constants/constants';
 
 const weatherRain = require('../../assets/weather-rain.png')

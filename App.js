@@ -20,6 +20,7 @@ import store, { persistor } from './src/js/store';
 import LoginScreen from "./src/js/screens/LoginScreen";
 import DashboardScreen from "./src/js/screens/Dashboard";
 import MyProfileScreen from "./src/js/screens/MyProfile";
+import ProfileDetailScreen from "./src/js/screens/ProfileDetail";
 // if (__DEV__) {
 //   import('./ReactotronConfig').then(() => console.log('Reactotron Configured'))
 // }
@@ -51,6 +52,7 @@ class WelcomeScreen extends Component {
 const AppSwitchNavigator = createSwitchNavigator({
   Welcome: { screen: WelcomeScreen },
   MyProfile: { screen: MyProfileScreen },
+  ProfileDetail: { screen: ProfileDetailScreen },
   Dashboard: { screen: DashboardScreen },
   Login: { screen: LoginScreen },
 });
