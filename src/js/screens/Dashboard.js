@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import ProgressCircle from 'react-native-progress-circle'
+import { BoxShadow } from 'react-native-shadow'
 
 import { SvgIcon } from '../components/SvgIcon'
 import { Theme } from '../constants/constants';
@@ -17,15 +18,15 @@ const iconSurvey = require('../../assets/icon_survey.png')
 
 const { width, height } = Dimensions.get('screen')
 
-const arrDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-const arrMonth = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'des'];
+import { db } from '../../../Firebase'
+
+const arrDay = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+const arrMonth = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DES'];
 
 class DashboardScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: 'Greg',
-      lastName: 'Kockott',
       address: 'Johannesburg, Gauteng',
       day: 4,
       date_month: 2,
@@ -34,8 +35,18 @@ class DashboardScreen extends Component {
       profilePoint: 500,
       profileCompletePercent: 50,
       surveyPoint: 200,
-      eLearningPoint: 200
+      eLearningPoint: 200,
+      profileInfo: {}
     }
+  }
+
+  componentDidMount() {
+    const { idNumber } = this.props;
+
+    let usersRef = db.ref('users/' + idNumber);
+    usersRef.on('value', snapshot => {
+      this.setState({profileInfo: snapshot.val()});
+    })
   }
 
   onUserDetailBtnClicked = () => {
@@ -55,11 +66,20 @@ class DashboardScreen extends Component {
   }
 
   render() {
-    const { firstName, lastName, address, day, date_month, date_day, userPoint, profilePoint, profileCompletePercent, surveyPoint, eLearningPoint } = this.state;
+    const { address, day, date_month, date_day, userPoint, profilePoint, profileCompletePercent, surveyPoint, eLearningPoint, profileInfo } = this.state;
+
+    const shadowOpt = {
+      width: 160,
+      height: 170,
+      color: '#190000',
+      x: 0,
+      y: 5
+    };
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scrollView}>
 
+        {/* <BoxShadow setting={shadowOpt}> */}
         <View style={styles.headerBack}>
           <View style={styles.headerSection}>
             <View style={styles.menuSection}>
@@ -67,7 +87,7 @@ class DashboardScreen extends Component {
                 <SvgIcon name="menu" color="white" />
                 <Text style={styles.goodMorningText}>{'Good morning'}</Text>
               </View>
-              <Text style={styles.firstUserName}>{firstName}!</Text>
+              <Text style={styles.firstUserName}>{profileInfo.firstName}!</Text>
             </View>
             <View style={styles.weatherSection}>
               <Image style={styles.weather} source={weatherRain} />
@@ -75,13 +95,14 @@ class DashboardScreen extends Component {
             </View>
           </View>
         </View>
+        {/* </BoxShadow> */}
 
         <View style={styles.userInfoCard}>
           <View style={styles.userInfoCardHeader}>
             <Image style={styles.photo} source={photo} />
             <View style={styles.personInfoSection}>
               <View style={styles.userNameSection}>
-                <Text style={styles.userName}>{firstName} {lastName}</Text>
+                <Text style={styles.userName}>{profileInfo.firstName} {profileInfo.lastName}</Text>
                 <Text style={styles.newbieFeature}>Newbie</Text>
               </View>
               <Text style={styles.address}>{address}</Text>
@@ -90,6 +111,7 @@ class DashboardScreen extends Component {
               <Image style={styles.moreDetailArrowRight} source={userDetailArrowRight} />
             </TouchableOpacity>
           </View>
+          <View style={styles.horSeperator} />
           <View style={styles.userInfoCardContent}>
             <View style={styles.pointSection}>
               <Text style={styles.userPoint}>{userPoint}</Text>
@@ -195,19 +217,18 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   goodMorningText: {
-    fontSize: 20,
-    // fontFamily: Theme.FONT_REGULAR,
+    fontSize: 23,
+    fontFamily: Theme.FONT_REGULAR,
     color: 'white',
     textAlign: 'center',
     marginLeft: 15
   },
   firstUserName: {
     fontFamily: Theme.FONT_BOLD,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#f6a723',
-    marginLeft: 40,
-    marginTop: 3
+    fontSize: 23,
+    color: Theme.colorLightBrown,
+    marginLeft: 39,
+    // marginTop: 3
   },
   weatherSection: {
     justifyContent: 'flex-end',
@@ -222,7 +243,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontFamily: Theme.FONT_BOLD,
     fontSize: 15,
-    color: '#f6a723'
+    color: Theme.colorLightBrown
   },
   userInfoCard: {
     width: '92%',
@@ -258,7 +279,7 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontFamily: Theme.FONT_BOLD,
-    fontSize: 15,
+    fontSize: 18,
     color: Theme.colorBlack,
     marginRight: 10
   },
@@ -269,6 +290,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colorLightBrown,
     color: Theme.colorWhite,
     textAlign: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 10,
@@ -290,12 +312,18 @@ const styles = StyleSheet.create({
     width: 10,
     height: 16
   },
+  horSeperator: {
+    width: '96%',
+    height: 0.5,
+    backgroundColor: '#e5e5ea',
+    marginTop: 10
+  },
   userInfoCardContent: {
     width: '95%',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 25
+    marginTop: 15
   },
   pointSection: {
     flexDirection: 'column'
@@ -353,18 +381,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   yourProfile: {
-    fontSize: 15,
+    fontFamily: Theme.FONT_REGULAR,
+    fontSize: 18,
     color: Theme.colorBlack,
     marginRight: 10
   },
   profileFeature: {
-    // height: 25,
+    height: 20,
     fontFamily: Theme.FONT_REGULAR,
     fontSize: 11,
     borderRadius: 15,
     backgroundColor: Theme.colorLightGreen,
     color: 'white',
     textAlign: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 10,
@@ -393,13 +423,14 @@ const styles = StyleSheet.create({
     height: 30
   },
   surveyFeature: {
-    // height: 25,
+    height: 20,
     fontFamily: Theme.FONT_REGULAR,
     fontSize: 11,
     borderRadius: 15,
     backgroundColor: Theme.colorLightBlue,
     color: 'white',
     textAlign: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 10,
@@ -427,6 +458,7 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colorLightRed,
     color: 'white',
     textAlign: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
     paddingLeft: 10,
@@ -441,6 +473,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
+    idNumber: state.loginUserReducer.idNumber
   }
 }
 

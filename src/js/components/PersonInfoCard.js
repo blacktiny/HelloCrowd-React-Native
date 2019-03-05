@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView
 import { Item, Label, Input, Form } from 'native-base'
 import { connect } from 'react-redux'
 import PropTypes from "prop-types"
-// import { BoxShadow } from 'react-native-shadow'
+import { BoxShadow } from 'react-native-shadow'
 
 import { SvgIcon } from './SvgIcon'
 import { Theme } from '../constants/constants';
@@ -17,8 +17,6 @@ export default class PersonInfoCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: 'Greg',
-      lastName: 'Kockott',
       isButtonDisabled: true,
       textValue: '',
       isSpaceAdded: false,
@@ -34,8 +32,45 @@ export default class PersonInfoCard extends Component {
     if (inputType === 'email') {
       this.emailValidation(value);
     } else if (inputType === 'phone') {
-      let phoneNumber = value.substr(0, 2) + ' ' + value.substr(2, 3) + ' ' + value.substr(5, 4);
+      let phoneNumber = '';
+      if (value) {
+        if (value.length < 3) {
+          phoneNumber = value.substr(0, value.length);
+        } else if (value.length < 6) {
+          phoneNumber = value.substr(0, 2) + ' ' + value.substr(2, value.length - 2);
+        } else if (value.length > 5) {
+          phoneNumber = value.substr(0, 2) + ' ' + value.substr(2, 3) + ' ' + value.substr(5, value.length - 5);
+        }
+      }
       this.setState({textValue: '+27 ' + phoneNumber});
+
+      this.phoneValidation('+27 ' + phoneNumber);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps !== this.props) {
+      const { inputType, value } = this.props;
+
+      this.setState({textValue: value});
+
+      if (inputType === 'email') {
+        this.emailValidation(value);
+      } else if (inputType === 'phone') {
+        let phoneNumber = '';
+        if (value) {
+          if (value.length < 3) {
+            phoneNumber = value.substr(0, value.length);
+          } else if (value.length < 6) {
+            phoneNumber = value.substr(0, 2) + ' ' + value.substr(2, value.length - 2);
+          } else if (value.length > 5) {
+            phoneNumber = value.substr(0, 2) + ' ' + value.substr(2, 3) + ' ' + value.substr(5, value.length - 5);
+          }
+        }
+        this.setState({textValue: '+27 ' + phoneNumber});
+
+        this.phoneValidation('+27 ' + phoneNumber);
+      }
     }
   }
 
@@ -48,33 +83,42 @@ export default class PersonInfoCard extends Component {
     }
   }
 
+  phoneValidation = (value) => {
+    const { isSpaceRemoved } = this.state
+    
+    if (value.length === 3) {
+      value += ' ';
+    } else if (value.length === 15) {
+      this.setState({isButtonDisabled: false});
+    } else if (value.length < 15) {
+      this.setState({isButtonDisabled: true});
+    }
+    if ((value.length === 6 || value.length === 10) && !isSpaceRemoved) {
+      value += ' ';
+    } else if ((value.length === 6 || value.length === 10) && isSpaceRemoved) {
+      value = value.slice(0, value.length - 1);
+      this.setState({isSpaceRemoved: false});
+    } else if (value.length === 7 || value.length === 11) {
+      this.setState({isSpaceRemoved: true});
+    }
+
+    return value;
+  }
+
   onInputValueChanged = (value) => {
-    const { textValue,isSpaceAdded, isSpaceRemoved } = this.state
-    const { inputType } = this.props
+    const { inputType, onInputValueChanged } = this.props;
 
     if (inputType === 'email') {
       this.emailValidation(value);
     } else if (inputType === 'phone') {
-      if (value.length === 3) {
-        value += ' ';
-      } else if (value.length === 15) {
-        this.setState({isButtonDisabled: false});
-      } else if (value.length < 15) {
-        this.setState({isButtonDisabled: true});
-      }
-      if ((value.length === 6 || value.length === 10) && !isSpaceRemoved) {
-        value += ' ';
-      } else if ((value.length === 6 || value.length === 10) && isSpaceRemoved) {
-        value = value.slice(0, value.length - 1);
-        this.setState({isSpaceRemoved: false});
-      } else if (value.length === 7 || value.length === 11) {
-        this.setState({isSpaceRemoved: true});
-      }
+      value = this.phoneValidation(value);
     } else {
 
     }
 
     this.setState({textValue: value});
+
+    onInputValueChanged(value);
   }
 
   onVerifyBtnClicked = () => {
@@ -85,14 +129,14 @@ export default class PersonInfoCard extends Component {
 
   render() {
     const { isButtonDisabled, textValue } = this.state;
-    const { inputType, placeholder, value, verifyStatus, editable } = this.props;
+    const { inputType, placeholder, verifyStatus, editable } = this.props;
     const shadowOpt = {
       width: 160,
       height: 170,
       color:"#190000",
       x: 0,
       y: 5
-  }
+    }
     return (
       <View style={styles.cardContainer}>
         <Form style={styles.form}>
@@ -124,6 +168,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingLeft: 8,
     backgroundColor: Theme.colorWhite,
+    borderRadius: 3
   },
   form: {
     width: '80%',
@@ -152,7 +197,7 @@ const styles = StyleSheet.create({
     height: 56,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Theme.colorLightGreen,
+    backgroundColor: Theme.colorLightGreen2,
     marginTop: -5
   },
   btnText: {
@@ -171,8 +216,9 @@ const styles = StyleSheet.create({
 PersonInfoCard.propTypes = {
   inputType: PropTypes.string || 'normal',
   placeholder: PropTypes.string.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   verifyStatus: PropTypes.string || 'none',
+  onInputValueChanged: PropTypes.func,
   onVerifyBtnClicked: PropTypes.func,
   editable: PropTypes.bool || false
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
-// import { BoxShadow } from 'react-native-shadow'
+import { BoxShadow } from 'react-native-shadow'
 
 import { SvgIcon } from '../components/SvgIcon'
 import { Theme } from '../constants/constants';
@@ -11,6 +11,8 @@ const iconChecked = require('../../assets/icon_checked.png')
 
 const { width, height } = Dimensions.get('screen')
 
+import { db } from '../../../Firebase'
+
 const arrDay = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const arrMonth = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'des'];
 
@@ -18,15 +20,22 @@ class MyProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: 'Greg',
-      lastName: 'Kockott',
-      address: 'Johannesburg, Gauteng',
       day: 4,
       date_month: 2,
       date_day: 13,
       completePercent: 50,
-      points: 100
+      points: 100,
+      profileInfo: {}
     }
+  }
+
+  componentDidMount() {
+    const { idNumber } = this.props;
+
+    let usersRef = db.ref('users/' + idNumber);
+    usersRef.on('value', snapshot => {
+      this.setState({profileInfo: snapshot.val()});
+    })
   }
 
   onUserBasicInfoDetail = () => {
@@ -34,7 +43,7 @@ class MyProfileScreen extends Component {
   }
 
   render() {
-    const { firstName, lastName, day, date_month, date_day, completePercent, points } = this.state;
+    const { day, date_month, date_day, completePercent, points, profileInfo } = this.state;
     const shadowOpt = {
       width: 160,
       height: 170,
@@ -59,7 +68,7 @@ class MyProfileScreen extends Component {
             <SvgIcon name="camera" color={Theme.colorWhite} />
             <Text style={styles.addPhoto}>{'Add a photo'}</Text>
           </View>
-          <Text style={styles.userName}>{firstName + '\n'}{lastName}</Text>
+          <Text style={styles.userName}>{profileInfo.firstName + '\n'}{profileInfo.lastName}</Text>
         </View>
 
         {/* <BoxShadow setting={shadowOpt}> */}
@@ -97,6 +106,8 @@ class MyProfileScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
+    height: '100%',
     backgroundColor: '#f1f3f8',
   },
   scrollView: {
@@ -166,11 +177,12 @@ const styles = StyleSheet.create({
     padding: 15,
     marginLeft: '4%',
     backgroundColor: 'white',
-    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 1 },
     shadowColor: '#190000',
-    shadowOpacity: 0.5,
-    marginBottom: 12
-    // elevation: 2
+    shadowOpacity: 0.1,
+    marginBottom: 15,
+    elevation: 18
   },
   inspectIconSection: {
     width: 50,
@@ -211,14 +223,16 @@ const styles = StyleSheet.create({
     padding: 15,
     marginLeft: '4%',
     backgroundColor: 'white',
-    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
     shadowColor: '#190000',
-    shadowOpacity: 0.5,
-    marginBottom: 12
+    shadowOpacity: 0.2,
+    marginBottom: 12,
+    elevation: 18
   },
   points: {
     fontSize: 15,
-    color: Theme.colorLightGreen
+    color: '#4cd964'
   },
   blankBottomView: {
     height: 50
@@ -227,6 +241,7 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
   return {
+    idNumber: state.loginUserReducer.idNumber
   }
 }
 

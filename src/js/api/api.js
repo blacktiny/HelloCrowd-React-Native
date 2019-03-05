@@ -1,10 +1,11 @@
-const what3wordsUrl = "https://api.what3words.com/v2/forward?addr=index.home.raft&key=TBF0OQEZ";
+const what3wordsUrl = "https://api.what3words.com/v2/forward";
+const what3wordsAPIKey = "TBF0OQEZ";
 
 let commonHeaders = {
   'Content-Type': 'application/json',
 }
 
-export const getLocationByWhat3Words = () => fetch(`${what3wordsUrl}`, {
+export const getLocationByWhat3Words = (address) => fetch(`${what3wordsUrl}?addr=${address}&key=${what3wordsAPIKey}`, {
   method: 'GET',
   headers: {
     // ...commonHeaders,

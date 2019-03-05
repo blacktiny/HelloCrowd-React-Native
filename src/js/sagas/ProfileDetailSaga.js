@@ -5,7 +5,8 @@ import { ActionTypes } from '../constants/constants'
 import { getLocationByWhat3Words } from '../api/api'
 
 const ProfileDetailSaga = function* (action) {
-  const dataObject = yield call(getLocationByWhat3Words);
+  console.log("address", action.payload.address);
+  const dataObject = yield call(getLocationByWhat3Words, action.payload.address);
   if (dataObject.status.reason === 'OK') {
     yield put({
       type: ActionTypes.GET_LOCATION_SUCCESS,
